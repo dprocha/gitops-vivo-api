@@ -54,7 +54,7 @@ spec:
           value: postgres
         - name: JAVA_TOOL_OPTIONS
           value: -Dmanagement.endpoint.health.probes.add-additional-paths="true" -Dmanagement.endpoint.health.show-details=always -Dmanagement.endpoints.web.base-path="/actuator" -Dmanagement.endpoints.web.exposure.include=* -Dmanagement.health.probes.enabled="true" -Dmanagement.server.port="8081" -Dserver.port="8080" -Dserver.shutdown.grace-period="24s"
-        image: tapf3658e5b.azurecr.io/tap/sc/vivo-api-vivo-4-0@sha256:edcdd18ece2ba4c4bf2555f586af7c34658bc9b4f43deface52c43e37c1df4f3
+        image: tapf3658e5b.azurecr.io/tap/sc/vivo-api-vivo-4-0@sha256:3f6837fa657824d58e5a48552c8c8f8eec108330a6911fcbeb8d51692e53d757
         livenessProbe:
           httpGet:
             path: /livez
