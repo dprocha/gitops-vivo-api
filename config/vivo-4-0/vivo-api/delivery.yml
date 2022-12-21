@@ -1,0 +1,76 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: vivo-api
+  labels:
+    app.kubernetes.io/part-of: vivo-api
+    apps.tanzu.vmware.com/has-tests: "true"
+    apps.tanzu.vmware.com/workload-type: web
+    kapp.k14s.io/app: "1665940932884434009"
+    kapp.k14s.io/association: v1.72fe3aa3536f06e863225ed8f78a7811
+    app.kubernetes.io/component: run
+    carto.run/workload-name: vivo-api
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+        boot.spring.io/actuator: http://:8081/actuator
+        boot.spring.io/version: 2.7.6
+        conventions.apps.tanzu.vmware.com/applied-conventions: |-
+          spring-boot-convention/spring-boot
+          spring-boot-convention/spring-boot-graceful-shutdown
+          spring-boot-convention/spring-boot-web
+          spring-boot-convention/spring-boot-actuator
+          spring-boot-convention/spring-boot-actuator-probes
+          spring-boot-convention/service-intent-postgres
+          appliveview-sample/app-live-view-appflavour-check
+          appliveview-sample/app-live-view-connector-boot
+          appliveview-sample/app-live-view-appflavours-boot
+          appliveview-sample/app-live-view-systemproperties
+        developer.conventions/target-containers: workload
+        kapp.k14s.io/identity: v1;vivo-4-0/carto.run/Workload/vivo-api;carto.run/v1alpha1
+        kapp.k14s.io/original: '{"apiVersion":"carto.run/v1alpha1","kind":"Workload","metadata":{"labels":{"app.kubernetes.io/part-of":"vivo-api","apps.tanzu.vmware.com/has-tests":"true","apps.tanzu.vmware.com/workload-type":"web","kapp.k14s.io/app":"1665940932884434009","kapp.k14s.io/association":"v1.72fe3aa3536f06e863225ed8f78a7811"},"name":"vivo-api","namespace":"vivo-4-0"},"spec":{"env":[{"name":"SPRING_PROFILES_ACTIVE","value":"postgres"}],"params":[{"name":"annotations","value":{"autoscaling.knative.dev/minScale":"1"}},{"name":"gitops_repository_name","value":"gitops-vivo-api"}],"serviceClaims":[{"name":"db","ref":{"apiVersion":"services.apps.tanzu.vmware.com/v1alpha1","kind":"ResourceClaim","name":"vivo-api-db-claim"}}],"source":{"git":{"ref":{"branch":"main"},"url":"ssh://git@github.com/dprocha/vivo-api.git"}}}}'
+        kapp.k14s.io/original-diff-md5: c6e94dc94aed3401b5d0f26ed6c0bff3
+        services.conventions.apps.tanzu.vmware.com/postgres: postgresql/42.3.8
+      labels:
+        app.kubernetes.io/component: run
+        app.kubernetes.io/part-of: vivo-api
+        apps.tanzu.vmware.com/has-tests: "true"
+        apps.tanzu.vmware.com/workload-type: web
+        carto.run/workload-name: vivo-api
+        conventions.apps.tanzu.vmware.com/framework: spring-boot
+        kapp.k14s.io/app: "1665940932884434009"
+        kapp.k14s.io/association: v1.72fe3aa3536f06e863225ed8f78a7811
+        services.conventions.apps.tanzu.vmware.com/postgres: workload
+        tanzu.app.live.view: "true"
+        tanzu.app.live.view.application.actuator.port: "8081"
+        tanzu.app.live.view.application.flavours: spring-boot
+        tanzu.app.live.view.application.name: vivo-api
+    spec:
+      containers:
+      - env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: postgres
+        - name: JAVA_TOOL_OPTIONS
+          value: -Dmanagement.endpoint.health.probes.add-additional-paths="true" -Dmanagement.endpoint.health.show-details=always -Dmanagement.endpoints.web.base-path="/actuator" -Dmanagement.endpoints.web.exposure.include=* -Dmanagement.health.probes.enabled="true" -Dmanagement.server.port="8081" -Dserver.port="8080" -Dserver.shutdown.grace-period="24s"
+        image: tapf3658e5b.azurecr.io/tap/sc/vivo-api-vivo-4-0@sha256:3f6837fa657824d58e5a48552c8c8f8eec108330a6911fcbeb8d51692e53d757
+        livenessProbe:
+          httpGet:
+            path: /livez
+            port: 8080
+            scheme: HTTP
+        name: workload
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+            scheme: HTTP
+        resources: {}
+        securityContext:
+          runAsUser: 1000
+      serviceAccountName: default
+
