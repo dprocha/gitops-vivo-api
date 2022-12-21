@@ -1,0 +1,28 @@
+apiVersion: servicebinding.io/v1alpha3
+kind: ServiceBinding
+metadata:
+  name: vivo-api-db
+  annotations:
+    kapp.k14s.io/identity: v1;vivo-4-0/carto.run/Workload/vivo-api;carto.run/v1alpha1
+    kapp.k14s.io/original: '{"apiVersion":"carto.run/v1alpha1","kind":"Workload","metadata":{"labels":{"app.kubernetes.io/part-of":"vivo-api","apps.tanzu.vmware.com/has-tests":"true","apps.tanzu.vmware.com/workload-type":"web","kapp.k14s.io/app":"1665940932884434009","kapp.k14s.io/association":"v1.72fe3aa3536f06e863225ed8f78a7811"},"name":"vivo-api","namespace":"vivo-4-0"},"spec":{"env":[{"name":"SPRING_PROFILES_ACTIVE","value":"postgres"}],"params":[{"name":"annotations","value":{"autoscaling.knative.dev/minScale":"1"}},{"name":"gitops_repository_name","value":"gitops-vivo-api"}],"serviceClaims":[{"name":"db","ref":{"apiVersion":"services.apps.tanzu.vmware.com/v1alpha1","kind":"ResourceClaim","name":"vivo-api-db-claim"}}],"source":{"git":{"ref":{"branch":"main"},"url":"ssh://git@github.com/dprocha/vivo-api.git"}}}}'
+    kapp.k14s.io/original-diff-md5: c6e94dc94aed3401b5d0f26ed6c0bff3
+    autoscaling.knative.dev/minScale: "1"
+  labels:
+    app.kubernetes.io/part-of: vivo-api
+    apps.tanzu.vmware.com/has-tests: "true"
+    apps.tanzu.vmware.com/workload-type: web
+    kapp.k14s.io/app: "1665940932884434009"
+    kapp.k14s.io/association: v1.72fe3aa3536f06e863225ed8f78a7811
+    app.kubernetes.io/component: run
+    carto.run/workload-name: vivo-api
+spec:
+  name: db
+  service:
+    apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+    kind: ResourceClaim
+    name: vivo-api-db-claim
+  workload:
+    apiVersion: serving.knative.dev/v1
+    kind: Service
+    name: vivo-api
+
